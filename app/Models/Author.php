@@ -13,4 +13,9 @@ class Author extends Model
     {
         return $this->belongsToMany(Book::class);
     }
+
+    public function subscribers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'subscriptions');
+    }
 }
