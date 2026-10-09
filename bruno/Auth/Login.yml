@@ -1,0 +1,22 @@
+info:
+  name: Login
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{process.env.APP_URL}}/api/login"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "esther.batz@example.com",
+        "password": "password"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
