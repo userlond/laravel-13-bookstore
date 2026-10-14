@@ -28,6 +28,9 @@ services:
         XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
         XDEBUG_LOG: /dev/stdout
         XDEBUG_LOG_LEVEL: 0
+    extra_hosts:
+      # Resolve the host machine from container
+      - "host.docker.internal:host-gateway"
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ./:/var/www
@@ -50,6 +53,9 @@ services:
         XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
         XDEBUG_LOG: /dev/stdout
         XDEBUG_LOG_LEVEL: 0
+    extra_hosts:
+      # Resolve the host machine from container
+      - "host.docker.internal:host-gateway"
     ports:
       - '${VITE_PORT:-5173}:5173'
     tty: true
