@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'book_last_notified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,6 +29,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'book_last_notified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -36,6 +37,11 @@ class User extends Authenticatable
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function bookPendingNotifications(): HasMany
+    {
+        return $this->hasMany(BookPendingNotification::class);
     }
 
     public function authorsSubscribedOn(): BelongsToMany
