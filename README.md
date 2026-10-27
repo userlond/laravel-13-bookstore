@@ -1,58 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📝 Laravel Books & Authors
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php)](https://www.php.net)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> 🎓 **Educational Pet Project**  
+> This repository is a project created to demonstrate modern API development practices using **Laravel 13**. It serves
+> as a sandbox for exploring up-to-date Laravel concepts.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ℹ️ Description
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+An educational Laravel project demonstrating a simple bookstore-like application with:
 
-## Learning Laravel
+- an admin interface for managing **books**, **authors**, and **clients**;
+- a REST API for clients to subscribe to authors;
+- a console command that notifies subscribed clients about new books from their favorite authors.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The project demonstrates common Laravel concepts such as:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Eloquent relationships;
+- admin CRUD (via Filament);
+- API routes;
+- observers;
+- events and listeners;
+- jobs and queues;
+- notifications;
+- console commands.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🚀 Getting Started
 
-## Agentic Development
+Follow these instructions to get a local copy of the project up and running.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- Linux OS (Ubuntu/Fedora etc.) recommended
+- [Docker](https://www.docker.com)
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/userlond/laravel-13-bookstore.git
+cd laravel-13-todolist-api
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2 **Configure Environment Variables**
+Create a .env file in the root directory by copying the .env.example file:
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3 **Start the container**
 
-## Code of Conduct
+```bash
+docker compose -f compose.prod.yaml up -d --build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ✨ Features
 
-## Security Vulnerabilities
+### Admin Panel
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+A simple admin interface allows administrators to manage:
 
-## License
+- **Authors**
+    - create, edit, delete authors.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Books**
+    - create, edit, delete books;
+    - upload book cover images;
+    - set book price;
+    - publish/unpublish books;
+    - assign one or more authors to a book.
+
+- **Clients**
+    - view registered users;
+    - view subscriptions and notification-related data.
+
+### Client REST API
+
+Authenticated clients can use the API to:
+
+- register/login;
+- subscribe to authors;
+- unsubscribe from authors;
+- view their subscriptions.
+
+### New Book Notifications
+
+There are 3 isolated steps:
+
+1. Event (Event Sourcing / Event Log): When a book is published, we simply record this fact in the transactional buffer
+   table `book_pending_notifications`.
+2. Aggregation and Scheduling (Cron/Scheduler): A console command is run once a day (or according to a schedule). It
+   selects users who have accumulated new books, groups them, and then pushes one consolidated task into the queue.
+3. Dispatch (Queue Workers): The workers disassemble the queue and send notifications.
+
+So user gets one notification with all new books of favourite authors. Not more than one notification per day.
+
+---
+
+## Tech Stack
+
+- PHP 8.5
+- Laravel 13
+- MySQL / MariaDB
+- Laravel Sanctum for API tokens
+- Filament V5 for admin CRUD
+- Database-driven cache, sessions, and queue
+- Laravel Mail / Notifications
