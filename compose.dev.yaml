@@ -32,6 +32,8 @@ services:
       # Resolve the host machine from container
       - "host.docker.internal:host-gateway"
     user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      - PHP_IDE_CONFIG=serverName=bookstore-backend
     volumes:
       - ./:/var/www
     networks:
@@ -60,6 +62,8 @@ services:
       - '${VITE_PORT:-5173}:5173'
     tty: true
     stdin_open: true
+    environment:
+      - PHP_IDE_CONFIG=serverName=bookstore-backend
     volumes:
       - ./:/var/www
     networks:
